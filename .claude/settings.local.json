@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./ads_visualization.exe:*)",
+      "Bash(make clean:*)",
+      "Bash(make:*)",
+      "Bash(/c/msys64/usr/bin/make.exe clean)",
+      "Bash(/c/msys64/usr/bin/make.exe:*)",
+      "Bash(\"/c/Program Files/CMake/bin/cmake.exe\" --build . --config Debug)"
+    ]
+  }
+}

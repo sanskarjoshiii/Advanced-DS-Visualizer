@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\e4ed0295c3ff8424287374915dbf5569\crow-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\e4ed0295c3ff8424287374915dbf5569\crow-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\e4ed0295c3ff8424287374915dbf5569\crow-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\e4ed0295c3ff8424287374915dbf5569\crow-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\e4ed0295c3ff8424287374915dbf5569\crow-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\e4ed0295c3ff8424287374915dbf5569\crow-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\e4ed0295c3ff8424287374915dbf5569\crow-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\e4ed0295c3ff8424287374915dbf5569\crow-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\3091852e7dfe3d8af7bfe455b38423e3\crow-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\deedc8819cb48d3f5db55c608f55836b\crow-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\crow-subbuild\CMakeFiles\crow-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{C485A753-517A-3BA7-8A0D-66E03AFEFBA0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

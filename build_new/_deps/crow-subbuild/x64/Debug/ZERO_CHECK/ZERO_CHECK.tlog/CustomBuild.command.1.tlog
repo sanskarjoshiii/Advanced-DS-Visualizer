@@ -1,0 +1,10 @@
+^C:\USERS\PREMA\DESKTOP\SANSKAR ENGINEERING\4 SEM\ADS\PROJECT\BUILD_NEW\_DEPS\CROW-SUBBUILD\CMAKEFILES\DEEDC8819CB48D3F5DB55C608F55836B\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/prema/Desktop/Sanskar Engineering/4 sem/ADS/PROJECT/build_new/_deps/crow-subbuild" "-BC:/Users/prema/Desktop/Sanskar Engineering/4 sem/ADS/PROJECT/build_new/_deps/crow-subbuild" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/prema/Desktop/Sanskar Engineering/4 sem/ADS/PROJECT/build_new/_deps/crow-subbuild/crow-populate.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

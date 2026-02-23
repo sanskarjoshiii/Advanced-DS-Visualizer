@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADS Visualization</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div id="toastContainer" class="toast-container"></div>
+    <div class="app">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Data Structures</h2>
+            </div>
+            <div class="sidebar-content">
+                <div class="category">
+                    <div class="category-header">Trees</div>
+                    <button class="ds-button" data-structure="threaded">
+                        <span class="ds-icon tb">TBT</span> Threaded Binary Tree
+                    </button>
+                    <button class="ds-button" data-structure="avl">
+                        <span class="ds-icon">AVL</span> AVL Tree
+                    </button>
+                    <button class="ds-button" data-structure="rbtree">
+                        <span class="ds-icon rb">RB</span> Red-Black Tree
+                    </button>
+                    <button class="ds-button" data-structure="heap">
+                        <span class="ds-icon hp">Heap</span> Heap Tree
+                    </button>
+                    <button class="ds-button" data-structure="huffman">
+                        <span class="ds-icon hf">H</span> Huffman Tree
+                    </button>
+                    <button class="ds-button" data-structure="btree">
+                        <span class="ds-icon bt">B</span> B-Tree
+                    </button>
+                    <button class="ds-button" data-structure="bplus">
+                        <span class="ds-icon bp">B+</span> B+ Tree
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-left">
+                    <h1>ADS Visualization</h1>
+                    <span class="current-ds-badge" id="currentDsBadge">Select a structure</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme">&#9789;</button>
+            </div>
+            <div class="content-area">
+                <div class="visualization-canvas" id="canvas">
+                    <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+                        <div class="spinner"></div>
+                        <span>Processing...</span>
+                    </div>
+                </div>
+                <div class="panels">
+                    <div class="panel controls-panel">
+                        <h3>Operations</h3>
+                        <div class="panel-content">
+                            <input type="text" id="inputValue" placeholder="Enter value" autocomplete="off">
+                            <div class="button-group">
+                                <button id="btnInsert" class="btn-insert" title="Insert value">Insert</button>
+                                <button id="btnDelete" class="btn-delete" title="Delete value">Delete</button>
+                                <button id="btnSearch" class="btn-search" title="Search value">Search</button>
+                                <button id="btnExtract" class="btn-extract" style="display:none;" title="Extract minimum">Extract Min</button>
+                                <button id="btnBuild" class="btn-build" style="display:none;" title="Build Huffman from text">Build</button>
+                                <button id="btnClear" class="btn-clear" title="Clear all">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel complexity-panel">
+                        <h3>Complexity</h3>
+                        <div class="panel-content" id="complexityInfo">
+                            <div class="complexity-grid" id="complexityGrid">
+                                <p class="placeholder-text">Select a data structure</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel history-panel">
+                        <h3>History</h3>
+                        <div class="panel-content" id="historyList">
+                            <p class="placeholder-text">No operations yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/app.js"></script>
+</body>
+</html>

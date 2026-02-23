@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\avl_tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\b_plus_tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\b_tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\heap_tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\huffman_tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\red_black_tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\threaded_binary_tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\avl_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\b_plus_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\b_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\heap_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\huffman_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\red_black_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\src\data-structures\threaded_binary_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{E2C3B8EA-59C1-3E95-83A5-30CD8BE7D183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{BA999AD1-E7C0-38C2-8E4A-BC4BC4759F85}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

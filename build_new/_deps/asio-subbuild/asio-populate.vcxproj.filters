@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\9283fd3362206b38ffe80c802be4af0a\asio-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\9283fd3362206b38ffe80c802be4af0a\asio-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\9283fd3362206b38ffe80c802be4af0a\asio-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\9283fd3362206b38ffe80c802be4af0a\asio-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\9283fd3362206b38ffe80c802be4af0a\asio-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\9283fd3362206b38ffe80c802be4af0a\asio-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\9283fd3362206b38ffe80c802be4af0a\asio-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\9283fd3362206b38ffe80c802be4af0a\asio-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\4b6dce171e49031ead7a6976824cc6a4\asio-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\2cd804d126a7c910f2341dfd4b5d0a46\asio-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\prema\Desktop\Sanskar Engineering\4 sem\ADS\PROJECT\build_new\_deps\asio-subbuild\CMakeFiles\asio-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{587817CC-2F26-3911-9824-40B0EE915B7B}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+^C:\USERS\PREMA\DESKTOP\SANSKAR ENGINEERING\4 SEM\ADS\PROJECT\CMAKELISTS.TXT
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/prema/Desktop/Sanskar Engineering/4 sem/ADS/PROJECT" "-BC:/Users/prema/Desktop/Sanskar Engineering/4 sem/ADS/PROJECT/build_new" --check-stamp-file "C:/Users/prema/Desktop/Sanskar Engineering/4 sem/ADS/PROJECT/build_new/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
