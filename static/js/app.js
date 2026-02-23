@@ -676,6 +676,79 @@ function renderBPlusTree(g, treeData, width, height) {
     nodes.attr('opacity', 0).transition().duration(400).delay((d, i) => i * 60).attr('opacity', 1);
 }
 
+// ========== SNAPSHOT ==========
+function takeSnapshot() {
+    const canvasEl = document.getElementById('canvas');
+    const svg = canvasEl.querySelector('svg');
+
+    if (!svg) {
+        showToast('Nothing to snapshot — build a tree first', 'warning');
+        return;
+    }
+
+    const svgWidth = canvasEl.clientWidth || 800;
+    const svgHeight = canvasEl.clientHeight || 600;
+
+    // Clone SVG and fix dimensions
+    const svgClone = svg.cloneNode(true);
+    svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    svgClone.setAttribute('width', svgWidth);
+    svgClone.setAttribute('height', svgHeight);
+
+    // Inline computed styles so CSS classes & CSS variables resolve in the export.
+    // Without this, paths default to black fill — causing the thick-band artifact.
+    const svgProps = [
+        'fill', 'stroke', 'stroke-width', 'stroke-dasharray', 'stroke-dashoffset',
+        'stroke-linecap', 'stroke-linejoin', 'opacity', 'font-size', 'font-weight',
+        'font-family', 'text-anchor', 'dominant-baseline', 'marker-end'
+    ];
+    const origEls = Array.from(svg.querySelectorAll('*'));
+    const cloneEls = Array.from(svgClone.querySelectorAll('*'));
+    origEls.forEach((el, i) => {
+        const computed = window.getComputedStyle(el);
+        svgProps.forEach(prop => {
+            const val = computed.getPropertyValue(prop);
+            if (val) cloneEls[i].setAttribute(prop, val);
+        });
+    });
+
+    // Inject background rect (theme-aware)
+    const isDark = document.body.classList.contains('dark');
+    const bgColor = isDark ? '#1a1b2e' : '#f8f9fa';
+    const bgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    bgRect.setAttribute('width', svgWidth);
+    bgRect.setAttribute('height', svgHeight);
+    bgRect.setAttribute('fill', bgColor);
+    svgClone.insertBefore(bgRect, svgClone.firstChild);
+
+    const svgData = new XMLSerializer().serializeToString(svgClone);
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+
+    const img = new Image();
+    img.onload = function () {
+        const offCanvas = document.createElement('canvas');
+        offCanvas.width = svgWidth;
+        offCanvas.height = svgHeight;
+        const ctx = offCanvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+
+        const name = currentStructure || 'tree';
+        const ts = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+        const link = document.createElement('a');
+        link.download = `${name}_${ts}.png`;
+        link.href = offCanvas.toDataURL('image/png');
+        link.click();
+        showToast('Snapshot saved!', 'success');
+    };
+    img.onerror = function () {
+        URL.revokeObjectURL(url);
+        showToast('Snapshot failed', 'error');
+    };
+    img.src = url;
+}
+
 // ========== EVENT LISTENERS ==========
 document.querySelectorAll('.ds-button').forEach(btn => {
     btn.addEventListener('click', () => selectStructure(btn.dataset.structure));
@@ -686,6 +759,7 @@ document.getElementById('btnSearch').addEventListener('click', search);
 document.getElementById('btnExtract').addEventListener('click', extractMin);
 document.getElementById('btnBuild').addEventListener('click', buildHuffman);
 document.getElementById('btnClear').addEventListener('click', clear);
+document.getElementById('snapshotBtn').addEventListener('click', takeSnapshot);
 
 document.getElementById('inputValue').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
