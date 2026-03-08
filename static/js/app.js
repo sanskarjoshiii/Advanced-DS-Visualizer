@@ -11,7 +11,6 @@ const DS_NAMES = {
     avl: 'AVL Tree',
     rbtree: 'Red-Black Tree',
     heap: 'Heap Tree',
-    huffman: 'Huffman Tree',
     btree: 'B-Tree',
     bplus: 'B+ Tree'
 };
@@ -32,10 +31,6 @@ const COMPLEXITY_DATA = {
     heap: {
         insert: 'O(log n)', 'extract-min': 'O(log n)', search: 'O(n)',
         space: 'O(n)', description: 'Binary min-heap: parent always smaller than children; array representation'
-    },
-    huffman: {
-        build: 'O(n log n)', space: 'O(k)',
-        description: 'Optimal prefix code from character frequencies; built from text string'
     },
     btree: {
         insert: 'O(log n)', delete: 'O(log n)', search: 'O(log n)',
@@ -67,7 +62,6 @@ function validateInput(value) {
         showToast('Please enter a value', 'warning');
         return false;
     }
-    if (currentStructure === 'huffman') return true;
     if (currentStructure === 'heap' || currentStructure === 'threaded' || currentStructure === 'avl' || currentStructure === 'rbtree' || currentStructure === 'btree' || currentStructure === 'bplus') {
         if (isNaN(parseInt(value))) {
             showToast('Please enter a valid number', 'warning');
@@ -140,21 +134,13 @@ async function selectStructure(structure) {
     document.getElementById('currentDsBadge').textContent = DS_NAMES[structure] || 'Select a structure';
 
     const isHeap = structure === 'heap';
-    const isHuffman = structure === 'huffman';
 
-    document.getElementById('btnInsert').style.display = isHuffman ? 'none' : 'inline-block';
-    document.getElementById('btnDelete').style.display = (isHeap || isHuffman) ? 'none' : 'inline-block';
-    document.getElementById('btnSearch').style.display = (isHeap || isHuffman) ? 'none' : 'inline-block';
+    document.getElementById('btnInsert').style.display = 'inline-block';
+    document.getElementById('btnDelete').style.display = isHeap ? 'none' : 'inline-block';
+    document.getElementById('btnSearch').style.display = isHeap ? 'none' : 'inline-block';
     document.getElementById('btnExtract').style.display = isHeap ? 'inline-block' : 'none';
-    document.getElementById('btnBuild').style.display = isHuffman ? 'inline-block' : 'none';
 
-    if (isHuffman) {
-        document.getElementById('inputValue').placeholder = 'Enter text to build Huffman tree (e.g. hello world)';
-    } else if (isHeap) {
-        document.getElementById('inputValue').placeholder = 'Enter a number to insert';
-    } else {
-        document.getElementById('inputValue').placeholder = 'Enter a number';
-    }
+    document.getElementById('inputValue').placeholder = isHeap ? 'Enter a number to insert' : 'Enter a number';
 
     document.getElementById('inputValue').value = '';
     updateComplexityPanel(structure);
@@ -182,7 +168,6 @@ async function loadTree() {
 
 async function insert() {
     if (!currentStructure) { showToast('Select a data structure first', 'warning'); return; }
-    if (currentStructure === 'huffman') return;
     const value = document.getElementById('inputValue').value.trim();
     if (!validateInput(value)) return;
 
@@ -287,35 +272,6 @@ async function extractMin() {
     }
 }
 
-async function buildHuffman() {
-    if (currentStructure !== 'huffman') return;
-    const text = document.getElementById('inputValue').value.trim();
-    if (!text) {
-        showToast('Enter text to build Huffman tree', 'warning');
-        return;
-    }
-    showLoading(true);
-    try {
-        const response = await fetch(`${API_BASE}/huffman/build`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text })
-        });
-        if (!response.ok) throw new Error(`Server error: ${response.status}`);
-        const data = await response.json();
-        currentTreeData = data.tree;
-        addOperation('build', `"${text.substring(0, 20)}${text.length > 20 ? '...' : ''}"`);
-        renderVisualization(currentTreeData);
-        document.getElementById('inputValue').value = '';
-        showToast('Huffman tree built', 'success');
-    } catch (error) {
-        console.error('Build error:', error);
-        showToast(`Build failed: ${error.message}`, 'error');
-    } finally {
-        showLoading(false);
-    }
-}
-
 async function clear() {
     if (!currentStructure) return;
     showLoading(true);
@@ -408,7 +364,6 @@ function renderVisualization(treeData) {
         case 'avl': renderAVLTree(g, treeData, innerWidth, innerHeight); break;
         case 'rbtree': renderRBTree(g, treeData, innerWidth, innerHeight); break;
         case 'heap': renderHeapTree(g, treeData, innerWidth, innerHeight); break;
-        case 'huffman': renderHuffmanTree(g, treeData, innerWidth, innerHeight); break;
         case 'btree': renderBTree(g, treeData, innerWidth, innerHeight); break;
         case 'bplus': renderBPlusTree(g, treeData, innerWidth, innerHeight); break;
     }
@@ -531,42 +486,6 @@ function renderHeapTree(g, heapData, width, height) {
         .attr('font-size', '14px').attr('font-weight', '700').attr('font-family', 'Inter, sans-serif')
         .text(d => d.data.data.value);
     nodeGs.attr('opacity', 0).transition().duration(400).delay((d, i) => i * 40).attr('opacity', 1);
-}
-
-function renderHuffmanTree(g, treeData, width, height) {
-    if (!treeData || (!treeData.left && !treeData.right)) {
-        g.append('text').attr('x', width / 2).attr('y', height / 2).attr('text-anchor', 'middle').attr('fill', '#999')
-            .attr('font-size', '15px').attr('font-family', 'Inter, sans-serif')
-            .text('Enter text and click Build to create Huffman tree');
-        return;
-    }
-    function huffToHierarchy(node) {
-        if (!node) return null;
-        const d = { data: { char: node.char || '', freq: node.freq }, children: [] };
-        if (node.left) d.children.push(huffToHierarchy(node.left));
-        if (node.right) d.children.push(huffToHierarchy(node.right));
-        if (d.children.length === 0) delete d.children;
-        return d;
-    }
-    const root = huffToHierarchy(treeData);
-    if (!root) return;
-    const hierarchy = d3.hierarchy(root, d => d.children);
-    const treeLayout = d3.tree().size([width, Math.max(height - 40, 100)]).separation((a, b) => 1.5);
-    treeLayout(hierarchy);
-
-    g.selectAll('.link').data(hierarchy.links()).enter().append('path').attr('class', 'link')
-        .attr('d', d3.linkVertical().x(d => d.x).y(d => d.y)).attr('stroke', '#adb5bd').attr('stroke-width', 2);
-    const nodes = g.selectAll('.node').data(hierarchy.descendants()).enter().append('g')
-        .attr('class', 'node').attr('transform', d => `translate(${d.x},${d.y})`);
-    nodes.append('circle').attr('r', 22)
-        .attr('fill', d => d.data.data.char ? '#2ecc71' : '#8e44ad').attr('stroke', '#fff').attr('stroke-width', 2);
-    nodes.append('text').attr('dy', '4').attr('text-anchor', 'middle').attr('fill', 'white')
-        .attr('font-size', '12px').attr('font-weight', '700').attr('font-family', 'Inter, sans-serif')
-        .text(d => d.data.data.char || d.data.data.freq);
-    nodes.append('text').attr('dy', '14').attr('text-anchor', 'middle').attr('fill', 'rgba(255,255,255,0.8)')
-        .attr('font-size', '9px').attr('font-family', 'Inter, sans-serif')
-        .text(d => d.data.data.char ? '' : 'freq:' + d.data.data.freq);
-    nodes.attr('opacity', 0).transition().duration(400).delay((d, i) => i * 40).attr('opacity', 1);
 }
 
 function renderBTree(g, treeData, width, height) {
@@ -757,15 +676,11 @@ document.getElementById('btnInsert').addEventListener('click', insert);
 document.getElementById('btnDelete').addEventListener('click', deleteValue);
 document.getElementById('btnSearch').addEventListener('click', search);
 document.getElementById('btnExtract').addEventListener('click', extractMin);
-document.getElementById('btnBuild').addEventListener('click', buildHuffman);
 document.getElementById('btnClear').addEventListener('click', clear);
 document.getElementById('snapshotBtn').addEventListener('click', takeSnapshot);
 
 document.getElementById('inputValue').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        if (currentStructure === 'huffman') buildHuffman();
-        else insert();
-    }
+    if (e.key === 'Enter') insert();
 });
 
 document.getElementById('themeToggle').addEventListener('click', () => {

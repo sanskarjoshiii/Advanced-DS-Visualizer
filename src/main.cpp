@@ -4,7 +4,6 @@
 #include "data-structures/b_plus_tree.h"
 #include "data-structures/threaded_binary_tree.h"
 #include "data-structures/heap_tree.h"
-#include "data-structures/huffman_tree.h"
 #include "data-structures/b_tree.h"
 #include <memory>
 #include <map>
@@ -21,7 +20,6 @@ map<string, unique_ptr<RedBlackTree>> rb_trees;
 map<string, unique_ptr<BPlusTree>> bplus_trees;
 map<string, unique_ptr<ThreadedBinaryTree>> threaded_trees;
 map<string, unique_ptr<HeapTree>> heaps;
-map<string, unique_ptr<HuffmanTree>> huffmans;
 map<string, unique_ptr<BTree>> btrees;
 
 string getSessionId(const crow::request& req) {
@@ -323,37 +321,6 @@ int main() {
         if (req.method == "OPTIONS"_method) return makeCorsOk();
         auto session = getSessionId(req);
         heaps[session] = make_unique<HeapTree>();
-        return makeJson(200, {{"success", true}});
-    });
-
-    // ==================== Huffman Tree ====================
-    CROW_ROUTE(app, "/api/huffman/build").methods("POST"_method, "OPTIONS"_method)
-    ([](const crow::request& req) {
-        if (req.method == "OPTIONS"_method) return makeCorsOk();
-        auto session = getSessionId(req);
-        auto body = crow::json::load(req.body);
-        if (!body || !body.has("text"))
-            return makeJson(400, {{"error", "Missing text"}});
-        string text = body["text"].s();
-        if (huffmans.find(session) == huffmans.end())
-            huffmans[session] = make_unique<HuffmanTree>();
-        huffmans[session]->buildFromString(text);
-        return makeJson(200, {{"success", true}, {"tree", huffmans[session]->toJson()}});
-    });
-
-    CROW_ROUTE(app, "/api/huffman/tree").methods("GET"_method)
-    ([](const crow::request& req) {
-        auto session = getSessionId(req);
-        if (huffmans.find(session) == huffmans.end())
-            return makeJson(200, {{"tree", nullptr}});
-        return makeJson(200, {{"tree", huffmans[session]->toJson()}});
-    });
-
-    CROW_ROUTE(app, "/api/huffman/clear").methods("POST"_method, "GET"_method, "OPTIONS"_method)
-    ([](const crow::request& req) {
-        if (req.method == "OPTIONS"_method) return makeCorsOk();
-        auto session = getSessionId(req);
-        huffmans[session] = make_unique<HuffmanTree>();
         return makeJson(200, {{"success", true}});
     });
 
