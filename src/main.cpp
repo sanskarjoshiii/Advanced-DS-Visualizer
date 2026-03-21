@@ -407,6 +407,9 @@ int main() {
     std::cout << "  Open: http://localhost:18080\n";
     std::cout << "====================================\n\n";
 
-    app.port(18080).multithreaded().run();
+    const char* port_env = std::getenv("PORT");
+    int port = port_env ? std::atoi(port_env) : 18080;
+    std::cout << "  Port: " << port << "\n";
+    app.port(port).multithreaded().run();
     return 0;
 }

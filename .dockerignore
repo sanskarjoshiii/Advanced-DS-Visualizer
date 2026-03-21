@@ -1,0 +1,7 @@
+build
+build_new
+tmp
+*.exe
+*.o
+.git
+.gitignore

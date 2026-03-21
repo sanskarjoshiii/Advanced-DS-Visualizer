@@ -4,7 +4,7 @@ let operations = [];
 let currentTreeData = null;
 let isLoading = false;
 
-const API_BASE = 'http://localhost:18080/api';
+const API_BASE = '/api';
 
 const DS_NAMES = {
     threaded: 'Threaded Binary Tree',
