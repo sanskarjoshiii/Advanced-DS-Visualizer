@@ -6,7 +6,11 @@ if %errorlevel% neq 0 (
     pause
     exit /b 1
 )
-echo Build successful! Starting server...
-echo Open http://localhost:18080 in your browser
+echo Build successful!
+echo.
+echo ====================================
+echo   Open: http://localhost:18080
+echo ====================================
+echo.
 ads_visualization.exe
 pause

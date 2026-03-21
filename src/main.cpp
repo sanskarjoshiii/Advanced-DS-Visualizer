@@ -402,6 +402,11 @@ int main() {
         return res;
     });
 
+    std::cout << "\n====================================\n";
+    std::cout << "  ADS Visualization is running!\n";
+    std::cout << "  Open: http://localhost:18080\n";
+    std::cout << "====================================\n\n";
+
     app.port(18080).multithreaded().run();
     return 0;
 }

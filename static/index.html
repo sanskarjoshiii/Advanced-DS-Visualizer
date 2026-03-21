@@ -18,24 +18,30 @@
             <div class="sidebar-content">
                 <div class="category">
                     <div class="category-header">Trees</div>
-                    <button class="ds-button" data-structure="threaded">
-                        <span class="ds-icon tb">TBT</span> Threaded Binary Tree
-                    </button>
-                    <button class="ds-button" data-structure="avl">
-                        <span class="ds-icon">AVL</span> AVL Tree
-                    </button>
-                    <button class="ds-button" data-structure="rbtree">
-                        <span class="ds-icon rb">RB</span> Red-Black Tree
-                    </button>
-                    <button class="ds-button" data-structure="heap">
-                        <span class="ds-icon hp">Heap</span> Heap Tree
-                    </button>
-                    <button class="ds-button" data-structure="btree">
-                        <span class="ds-icon bt">B</span> B-Tree
-                    </button>
-                    <button class="ds-button" data-structure="bplus">
-                        <span class="ds-icon bp">B+</span> B+ Tree
-                    </button>
+                    <div class="ds-entry">
+                        <button class="ds-button" data-structure="threaded">Threaded Binary Tree</button>
+                        <button class="ds-detail-btn" data-structure="threaded">See Details</button>
+                    </div>
+                    <div class="ds-entry">
+                        <button class="ds-button" data-structure="avl">AVL Tree</button>
+                        <button class="ds-detail-btn" data-structure="avl">See Details</button>
+                    </div>
+                    <div class="ds-entry">
+                        <button class="ds-button" data-structure="rbtree">Red-Black Tree</button>
+                        <button class="ds-detail-btn" data-structure="rbtree">See Details</button>
+                    </div>
+                    <div class="ds-entry">
+                        <button class="ds-button" data-structure="heap">Heap Tree</button>
+                        <button class="ds-detail-btn" data-structure="heap">See Details</button>
+                    </div>
+                    <div class="ds-entry">
+                        <button class="ds-button" data-structure="btree">B-Tree</button>
+                        <button class="ds-detail-btn" data-structure="btree">See Details</button>
+                    </div>
+                    <div class="ds-entry">
+                        <button class="ds-button" data-structure="bplus">B+ Tree</button>
+                        <button class="ds-detail-btn" data-structure="bplus">See Details</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,6 +93,15 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="ds-modal-overlay" id="dsModal">
+        <div class="ds-modal">
+            <div class="ds-modal-head">
+                <span class="ds-modal-title" id="dsModalTitle"></span>
+                <button class="ds-modal-close" id="dsModalClose">&#x2715;</button>
+            </div>
+            <div class="ds-modal-body" id="dsModalBody"></div>
         </div>
     </div>
     <script src="/js/app.js"></script>

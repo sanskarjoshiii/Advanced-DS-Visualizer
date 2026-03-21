@@ -37,3 +37,4 @@ package-lock.json
 *.ts
 *.tsx
 tsconfig.json
+.env

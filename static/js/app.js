@@ -316,6 +316,106 @@ function highlightNode(value) {
     });
 }
 
+// ========== NODE COMMENTS ==========
+function getCommentForNode(structure, nd, pd, heapNodes) {
+    switch (structure) {
+        case 'avl': {
+            if (!pd) return 'Root \u2014 first node inserted';
+            const side = pd.left && pd.left.value === nd.value ? 'L' : 'R';
+            const lh = nd.left ? nd.left.height : 0;
+            const rh = nd.right ? nd.right.height : 0;
+            const bf = lh - rh;
+            return `${side}-child of ${pd.value} | BF=${bf}${bf === 0 ? ' (balanced)' : bf === 1 || bf === -1 ? ' (ok)' : ' (rotated)'}`;
+        }
+        case 'rbtree': {
+            if (!pd) return 'Root \u2014 colored BLACK by rule';
+            const side = pd.left && pd.left.value === nd.value ? 'L' : 'R';
+            return `${nd.color || 'RED'} node | ${side}-child of ${pd.value} (${pd.color || 'BLACK'})`;
+        }
+        case 'heap': {
+            if (nd.index === 0) return heapNodes && heapNodes.length === 1 ? 'Root \u2014 first element' : 'Root (minimum element)';
+            const pi = Math.floor((nd.index - 1) / 2);
+            const pv = heapNodes && heapNodes[pi] ? heapNodes[pi].value : '?';
+            return `idx=${nd.index} | parent: ${pv} | min-heap satisfied`;
+        }
+        case 'threaded': {
+            if (!pd) return 'Root \u2014 threaded BST';
+            const side = pd.left && pd.left.value === nd.value ? 'L' : 'R';
+            const parts = [];
+            if (nd.leftThread) parts.push('L\u2192inorder pred');
+            if (nd.rightThread) parts.push('R\u2192inorder succ');
+            return `${side}-child of ${pd.value}${parts.length ? ' | ' + parts.join(', ') : ''}`;
+        }
+        case 'btree': {
+            const isLeaf = !nd.children || nd.children.length === 0;
+            const kn = (nd.keys || []).length;
+            if (!pd) return `Root | ${kn} key${kn !== 1 ? 's' : ''} | ${isLeaf ? 'leaf' : 'internal'}`;
+            return `${isLeaf ? 'Leaf' : 'Internal'} node | ${kn} key${kn !== 1 ? 's' : ''}`;
+        }
+        case 'bplus': {
+            const isLeaf = nd.isLeaf || !nd.children || nd.children.length === 0;
+            const kn = (nd.keys || []).length;
+            if (!pd) return `Root | ${kn} key${kn !== 1 ? 's' : ''}`;
+            return isLeaf ? `Leaf | ${kn} key${kn !== 1 ? 's' : ''} | linked for range scan` : `Internal | ${kn} key${kn !== 1 ? 's' : ''}`;
+        }
+        default: return '';
+    }
+}
+
+function addCommentIcon(nodeGroup, comment, iconX, iconY) {
+    if (!comment) return;
+    if (iconX === undefined) iconX = 30;
+    if (iconY === undefined) iconY = -28;
+
+    // Split at ' | ' into two lines so nothing is truncated
+    const segments = comment.split(' | ');
+    const lines = segments.length >= 2
+        ? [segments[0], segments.slice(1).join(' | ')]
+        : [comment];
+
+    const charW = 6.2;
+    const padX = 10;
+    const lineH = 15;
+    const boxW = Math.max(...lines.map(l => l.length * charW)) + padX * 2;
+    const boxH = lines.length === 1 ? 22 : 22 + (lines.length - 1) * lineH;
+    const bx = iconX + 10;
+    const by = iconY - boxH / 2;
+
+    const wrap = nodeGroup.append('g').attr('class', 'comment-trigger');
+
+    // Bubble (hidden by default)
+    const bubble = wrap.append('g').attr('class', 'comment-bubble').attr('opacity', 0).attr('pointer-events', 'none');
+    bubble.append('rect')
+        .attr('x', bx).attr('y', by).attr('width', boxW).attr('height', boxH).attr('rx', 4)
+        .attr('fill', 'rgba(10,10,30,0.92)')
+        .attr('stroke', 'rgba(140,140,255,0.4)').attr('stroke-width', 1);
+    lines.forEach((line, i) => {
+        bubble.append('text')
+            .attr('x', bx + padX).attr('y', by + 14 + i * lineH)
+            .attr('fill', i === 0 ? '#e2e8f0' : '#a5b4fc')
+            .attr('font-size', '9.5px').attr('font-family', 'Inter, sans-serif')
+            .text(line);
+    });
+
+    // Arrow icon
+    const icon = wrap.append('g').style('cursor', 'pointer');
+    icon.append('circle')
+        .attr('cx', iconX).attr('cy', iconY).attr('r', 7)
+        .attr('fill', '#6366f1').attr('stroke', 'white').attr('stroke-width', 1.5);
+    icon.append('path')
+        .attr('d', `M ${iconX - 2},${iconY - 3} L ${iconX + 3},${iconY} L ${iconX - 2},${iconY + 3} Z`)
+        .attr('fill', 'white').attr('pointer-events', 'none');
+
+    let open = false;
+    icon.on('click', function(event) {
+        event.stopPropagation();
+        open = !open;
+        bubble.transition().duration(150).attr('opacity', open ? 1 : 0);
+        bubble.attr('pointer-events', open ? 'all' : 'none');
+        icon.select('circle').transition().duration(150).attr('fill', open ? '#818cf8' : '#6366f1');
+    });
+}
+
 // ========== VISUALIZATION ==========
 function isEmptyData(data) {
     if (!data) return true;
@@ -396,6 +496,10 @@ function renderThreadedTree(g, treeData, width, height) {
         .attr('font-size', '8px').attr('font-family', 'Inter, sans-serif')
         .text(d => (d.data.data.leftThread ? 'L' : '') + (d.data.data.rightThread ? 'R' : ''));
     nodes.attr('opacity', 0).transition().duration(400).delay((d, i) => i * 40).attr('opacity', 1);
+    nodes.each(function(d) {
+        const nd = d.data.data, pd = d.parent ? d.parent.data.data : null;
+        addCommentIcon(d3.select(this), getCommentForNode('threaded', nd, pd, null));
+    });
 }
 
 function renderAVLTree(g, treeData, width, height) {
@@ -427,6 +531,10 @@ function renderAVLTree(g, treeData, width, height) {
     nodes.append('text').attr('dy', '12').attr('text-anchor', 'middle').attr('fill', 'rgba(255,255,255,0.75)')
         .attr('font-size', '9px').attr('font-family', 'Inter, sans-serif').text(d => `h:${d.data.data.height}`);
     nodes.attr('opacity', 0).transition().duration(400).delay((d, i) => i * 40).attr('opacity', 1);
+    nodes.each(function(d) {
+        const nd = d.data.data, pd = d.parent ? d.parent.data.data : null;
+        addCommentIcon(d3.select(this), getCommentForNode('avl', nd, pd, null));
+    });
 }
 
 function renderRBTree(g, treeData, width, height) {
@@ -453,6 +561,10 @@ function renderRBTree(g, treeData, width, height) {
         .attr('font-size', '8px').attr('font-weight', '600').attr('font-family', 'Inter, sans-serif')
         .text(d => d.data.data.color);
     nodes.attr('opacity', 0).transition().duration(400).delay((d, i) => i * 40).attr('opacity', 1);
+    nodes.each(function(d) {
+        const nd = d.data.data, pd = d.parent ? d.parent.data.data : null;
+        addCommentIcon(d3.select(this), getCommentForNode('rbtree', nd, pd, null));
+    });
 }
 
 function renderHeapTree(g, heapData, width, height) {
@@ -486,6 +598,9 @@ function renderHeapTree(g, heapData, width, height) {
         .attr('font-size', '14px').attr('font-weight', '700').attr('font-family', 'Inter, sans-serif')
         .text(d => d.data.data.value);
     nodeGs.attr('opacity', 0).transition().duration(400).delay((d, i) => i * 40).attr('opacity', 1);
+    nodeGs.each(function(d) {
+        addCommentIcon(d3.select(this), getCommentForNode('heap', d.data.data, null, nodes));
+    });
 }
 
 function renderBTree(g, treeData, width, height) {
@@ -530,6 +645,8 @@ function renderBTree(g, treeData, width, height) {
                 .attr('text-anchor', 'middle').attr('fill', 'white').attr('font-size', '12px')
                 .attr('font-weight', '700').attr('font-family', 'Inter, sans-serif').text(key);
         });
+        const nd = d.data.data, pd = d.parent ? d.parent.data.data : null;
+        addCommentIcon(nodeG, getCommentForNode('btree', nd, pd, null), totalW / 2 + 12, 0);
     });
     nodes.attr('opacity', 0).transition().duration(400).delay((d, i) => i * 50).attr('opacity', 1);
 }
@@ -581,6 +698,8 @@ function renderBPlusTree(g, treeData, width, height) {
                 .attr('text-anchor', 'middle').attr('fill', 'white').attr('font-size', '13px')
                 .attr('font-weight', '700').attr('font-family', 'Inter, sans-serif').text(key);
         });
+        const nd = d.data.data, pd = d.parent ? d.parent.data.data : null;
+        addCommentIcon(nodeG, getCommentForNode('bplus', nd, pd, null), totalW / 2 + 12, 0);
     });
     const leaves = hierarchy.leaves();
     for (let i = 0; i < leaves.length - 1; i++) {
@@ -668,6 +787,154 @@ function takeSnapshot() {
     img.src = url;
 }
 
+// ========== TREE DETAILS ==========
+const TREE_DETAILS = {
+    threaded: {
+        title: 'Threaded Binary Tree',
+        algorithm: [
+            'Start at the root. If value is smaller, move left; if larger, move right.',
+            'Keep moving until you hit an empty spot (a null pointer).',
+            'Create a new node and place it at that empty spot.',
+            'If the left pointer was null → set a left thread pointing to the inorder predecessor.',
+            'If the right pointer was null → set a right thread pointing to the inorder successor.',
+            'Update the old thread that used to point here so it now points to the new node.'
+        ],
+        rules: [
+            'Smaller values always go left, larger values always go right (same as normal BST).',
+            'Null left/right pointers are replaced with "threads" — shortcuts to neighbors.',
+            'A left thread points to the inorder predecessor (the node visited just before this one).',
+            'A right thread points to the inorder successor (the node visited just after this one).',
+            '"L" shown inside a node means its left pointer is a thread, not a real child.',
+            '"R" shown inside a node means its right pointer is a thread, not a real child.',
+            'Threads allow full tree traversal without needing any extra memory (no recursion stack).'
+        ]
+    },
+    avl: {
+        title: 'AVL Tree',
+        algorithm: [
+            'Insert the value like a normal BST — go left if smaller, right if larger.',
+            'After inserting, go back up to the root and check each node\'s balance.',
+            'Balance Factor (BF) = Height of left subtree − Height of right subtree.',
+            'If every node has BF = −1, 0, or +1 → tree is already balanced. Done!',
+            'If any node has BF = +2 or −2 → perform a rotation to fix the imbalance.',
+            'LL case (inserted in left-left direction) → single right rotation.',
+            'RR case → single left rotation. LR case → left rotate then right rotate. RL → right then left.',
+            'After the rotation the tree is balanced again. Height stays O(log n).'
+        ],
+        rules: [
+            'Every single node must have a Balance Factor of −1, 0, or +1. No exceptions.',
+            'Balance Factor = Left subtree height − Right subtree height.',
+            'The number shown inside each node (h:X) is its current height from the bottom.',
+            'Darkest node (BF = 0) → perfectly balanced on both sides.',
+            'Medium grey node (|BF| = 1) → slightly off balance but still valid.',
+            'If BF reaches ±2 a rotation fires automatically — you never see an unbalanced AVL tree.',
+            'Because it stays balanced, search, insert, and delete are always O(log n).'
+        ]
+    },
+    rbtree: {
+        title: 'Red-Black Tree',
+        algorithm: [
+            'Insert the new node like a normal BST. Color it RED.',
+            'If its parent is BLACK → no violation. Done!',
+            'If its parent is also RED → violation! Look at the parent\'s sibling (the uncle node).',
+            'Case 1 — Uncle is RED: Recolor parent and uncle to BLACK, grandparent to RED. Move up.',
+            'Case 2 — Uncle is BLACK, node is an inner child: Rotate to make it an outer child (go to Case 3).',
+            'Case 3 — Uncle is BLACK, node is an outer child: Rotate the grandparent and swap colors.',
+            'After all fixes, force the root to BLACK. Repeat checking upward if needed.'
+        ],
+        rules: [
+            'Each node is either RED (shown as lighter grey) or BLACK (shown as near-black).',
+            'The root is ALWAYS BLACK — no exceptions.',
+            'A RED node can never have a RED parent (no two REDs in a row on any path).',
+            'Every path from root down to any null must pass through the same number of BLACK nodes.',
+            'New nodes are always inserted as RED first, then fixes are applied if needed.',
+            'Rotations and recoloring fix violations automatically — the tree self-corrects.',
+            'This guarantees the tree height stays within 2× log n, so all ops are O(log n).'
+        ]
+    },
+    heap: {
+        title: 'Min-Heap Tree',
+        algorithm: [
+            'Add the new value at the very end (next available slot in the array).',
+            'Compare it with its parent. If the new value is smaller than the parent → swap.',
+            'Keep comparing and swapping upward. This is called "heapify up" or "bubble up".',
+            'Stop when the parent is smaller than the new value, or you reach the root.',
+            'For Extract Min: remove the root, move the last element to the root position.',
+            'Then "heapify down": swap the root with its smallest child until the heap rule holds again.'
+        ],
+        rules: [
+            'The parent node is ALWAYS smaller than or equal to both of its children. Always.',
+            'The darkest node at the top = the root = the minimum (smallest) element in the heap.',
+            'The tree is always a Complete Binary Tree — filled level by level, left to right.',
+            'Array index formula: left child = 2i+1, right child = 2i+2, parent = (i−1)/2.',
+            'Inserting adds to the end and bubbles up — structure stays complete.',
+            'Extract Min gives the smallest element in O(log n) time.',
+            'Heap is used in priority queues, scheduling systems, and heap sort.'
+        ]
+    },
+    btree: {
+        title: 'B-Tree',
+        algorithm: [
+            'Use the keys in each node as guides — go to the child pointer between the two nearest keys.',
+            'Keep traversing down until you reach a leaf node.',
+            'Insert the new key into that leaf node in sorted order.',
+            'If the leaf now has too many keys (overflow) → split it into two nodes.',
+            'The middle key from the split moves UP to the parent node.',
+            'If the parent also overflows after receiving the key → split the parent too.',
+            'If even the root splits, a brand new root is created and the tree grows one level taller.'
+        ],
+        rules: [
+            'Each node can hold multiple keys, all stored in sorted (ascending) order.',
+            'Darker node = internal node (acts as a guide only). Lighter = leaf node (stores data).',
+            'All leaf nodes are always at the exact same level — B-Trees are perfectly balanced.',
+            'A node with n keys has exactly n+1 child pointers.',
+            'No data is duplicated — each key appears in exactly one place.',
+            'Splitting keeps the tree balanced without any rotations.',
+            'B-Trees are used in databases and file systems because they minimize disk reads.'
+        ]
+    },
+    bplus: {
+        title: 'B+ Tree',
+        algorithm: [
+            'Always insert into a leaf node. Use internal nodes only as guides to find the right leaf.',
+            'Insert the key into the leaf in sorted order.',
+            'If the leaf is full (overflow) → split it: left half stays, right half goes to a new node.',
+            'Copy the first key of the right half UP to the parent (the key stays in the leaf too!).',
+            'If an internal node overflows → split it and push the middle key up (it is removed from below).',
+            'All leaf nodes always stay linked together left to right for fast range queries.'
+        ],
+        rules: [
+            'ALL actual data is stored only in leaf nodes — internal nodes are just guides.',
+            'Internal nodes hold separator keys that tell you which direction to go.',
+            'All leaf nodes are linked in order (shown by the dashed arrows →).',
+            'This makes range queries very fast: find the start leaf, then just follow the links.',
+            'When a leaf splits, the first key of the right half is COPIED up (stays in leaf).',
+            'When an internal node splits, the middle key is PUSHED up (removed from that level).',
+            'B+ Trees power almost every modern database engine (MySQL, PostgreSQL, SQLite, etc.).'
+        ]
+    }
+};
+
+function showTreeDetails(structure) {
+    const d = TREE_DETAILS[structure];
+    if (!d) return;
+    document.getElementById('dsModalTitle').textContent = d.title;
+    document.getElementById('dsModalBody').innerHTML = `
+        <div class="detail-section">
+            <div class="detail-section-title">How Insertion Works</div>
+            <ol class="detail-steps">
+                ${d.algorithm.map((s, i) => `<li><span class="step-num">${i + 1}</span><span>${s}</span></li>`).join('')}
+            </ol>
+        </div>
+        <div class="detail-section">
+            <div class="detail-section-title">Rules to Remember</div>
+            <ul class="detail-rules">
+                ${d.rules.map(r => `<li>${r}</li>`).join('')}
+            </ul>
+        </div>`;
+    document.getElementById('dsModal').classList.add('open');
+}
+
 // ========== EVENT LISTENERS ==========
 document.querySelectorAll('.ds-button').forEach(btn => {
     btn.addEventListener('click', () => selectStructure(btn.dataset.structure));
@@ -694,6 +961,16 @@ if (localStorage.getItem('ads-theme') === 'dark') {
     document.body.classList.add('dark');
     document.getElementById('themeToggle').innerHTML = '&#9788;';
 }
+
+document.querySelectorAll('.ds-detail-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => { e.stopPropagation(); showTreeDetails(btn.dataset.structure); });
+});
+document.getElementById('dsModalClose').addEventListener('click', () => {
+    document.getElementById('dsModal').classList.remove('open');
+});
+document.getElementById('dsModal').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+});
 
 let resizeTimer;
 window.addEventListener('resize', () => {
